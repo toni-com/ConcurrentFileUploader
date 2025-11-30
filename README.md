@@ -8,6 +8,7 @@ This project was built to learn about Go concurrency patterns, specifically focu
 
 **1. Concurrency in Action**
 The application spins up a local mock server and processes a queue of files using a fixed set of workers.
+
 <img width="331" height="322" alt="serverReceivingWorkerUploading" src="https://github.com/user-attachments/assets/7cf3765f-49c7-4798-b0cf-1a499142a395" />
 
 
