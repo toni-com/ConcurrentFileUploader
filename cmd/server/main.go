@@ -43,40 +43,56 @@ func main() {
 	time.Sleep(100 * time.Millisecond)
 
 	// Create Dummy Files
-	files := []string{"doc1.txt", "doc2.txt", "doc3.txt", "doc4.txt", "doc5.txt"}
-	for i, name := range files {
-		err := os.WriteFile(name, []byte(fmt.Sprintf("Hello World: [%d]", i)), 0644)
-		if err != nil {
-			fmt.Printf("File creation failed: %v\n", err)
-			return
-		}
-		// Defer cleanup
+	fileCount := 100
+	files := make([]string, fileCount)
+	fmt.Printf("Generating %d dummy files...\n", fileCount)
+
+	for i := 0; i < fileCount; i++ {
+		name := fmt.Sprintf("job_%03d.dat", i)
+		files[i] = name
+		_ = os.WriteFile(name, []byte("data"), 0644)
+		// Clean up when main exits
 		defer func(name string) {
 			err := os.Remove(name)
 			if err != nil {
-				fmt.Printf("File deletion failed: %v\n", err)
+				fmt.Printf("Error closing files: %v\n", err)
 			}
 		}(name)
 	}
+	start := time.Now()
 
 	// Setup Uploader
 	up := &uploader.HttpUploader{
 		UploadURL: "http://localhost:8080/upload",
 		Client:    http.DefaultClient,
 	}
-	bg := context.Background()
 
 	// Run Concurrent Uploads
-	results := uploader.UploadFiles(bg, files, up, 2)
+	concurrency := 10
+	results := uploader.UploadFiles(context.Background(), files, up, concurrency)
 
 	// Process Results
+	successCount := 0
+	failCount := 0
 	for res := range results {
 		if res.Err != nil {
 			fmt.Printf("%s failed: %v\n", res.FilePath, res.Err)
+			failCount++
 		} else {
 			fmt.Printf("%s uploaded successfully\n", res.FilePath)
+			successCount++
 		}
 	}
 
-	fmt.Println("All uploads finished!")
+	totalTime := time.Since(start)
+	fmt.Println("\n" + "----------------------------------------")
+	fmt.Println("    UPLOAD SUMMARY")
+	fmt.Println("----------------------------------------")
+	fmt.Printf("Total Files:    %d\n", fileCount)
+	fmt.Printf("Concurrency:    %d workers\n", concurrency)
+	fmt.Printf("Successful:     %d\n", successCount)
+	fmt.Printf("Failed:         %d\n", failCount)
+	fmt.Printf("Total Duration: %s\n", totalTime)
+	fmt.Printf("Throughput:     %.2f files/sec\n", float64(fileCount)/totalTime.Seconds())
+	fmt.Println("----------------------------------------")
 }
