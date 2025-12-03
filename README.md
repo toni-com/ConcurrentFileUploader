@@ -6,16 +6,10 @@ This project was built to learn about Go concurrency patterns, specifically focu
 
 ## Demo
 
-**1. Concurrency in Action**
-The application spins up a local mock server and processes a queue of files using a fixed set of workers.
-
-<img width="331" height="322" alt="serverReceivingWorkerUploading" src="https://github.com/user-attachments/assets/7cf3765f-49c7-4798-b0cf-1a499142a395" />
-
-
-**2. Final Report**
-Once processing is complete, it generates a summary of the throughput and status.
-<img width="424" height="232" alt="uploadSummary" src="https://github.com/user-attachments/assets/c0a74cf4-f7a8-42e8-80b4-f6c5e3a60718" />
-
+| Concurrency in Action | Final Report |
+| :---: | :---: |
+|<img width="331" height="322" alt="serverReceivingWorkerUploading" src="https://github.com/user-attachments/assets/7cf3765f-49c7-4798-b0cf-1a499142a395" /> | <img width="378" height="232" alt="uploadSummary" src="https://github.com/user-attachments/assets/ebc2dce5-3e18-42e9-9ce2-186ef7c307df" /> |
+| The application spins up a local mock server and processes a queue of files using a fixed set of workers. | Once processing is complete, it generates a summary of the throughput and status. |
 
 ## Learnings
 
